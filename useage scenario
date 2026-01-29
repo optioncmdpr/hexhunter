@@ -1,0 +1,68 @@
+I propose the theory that a hybrid key derivation scheme was used in key generation, thusly making brute forcing of key spaces beyond 2^64 reasonably viable endeavors and in consideration of reducing the environmental impact in energy use. This hybrid model is consists of manually establishing solvable-by-logic leading bytes of unknown length, the remainder of the key being ecdsa/bip32 derived trailing bytes from a masked 77 digit integer to be brute-forced.
+The logic in leading byte creation shows evidence of having several schemes: being dynamic prevents one person from taking all of the fruit, keeping things fair.
+
+During reverse engineering experiments on known keys I would like to share what I propose
+to be at least one of several approach angles. Perhaps this can be probed and further insights
+and more meaning discovered:  
+
+     Potential logic used for deriving leading bytes for key 66 from key 65 using the hash160 of its compressed and            
+          uncompressed public key(s)
+ 
+
+Start with setting the target:
+
+pk#66 dec                             pk#65 dec
+46346217550346335726 -30568377312064202855 = 15777840238282132871 ( target)
+
+let us now determine how the value 15777840238282132871 was calculated:
+
+
+Pk # 65 in 32 byte hex
+0x000000000000000000000000000000000000000000000001a838b13505b26867
+u:  1Pq6ZX74n7KvWpHtLX19rLnE37iMA4FTWC
+c:  18ZMbwUFLMHoZBbfpCjUJQTCMCbktshgpe
+
+    revert address type >> ( pre base58 check encoded/  hash-160 state )
+
+u:  fa6b600ec240c78aed2222e29a59e0d4cab161a1
+c:  52e763a7ddc1aa4fa811578c491c1bc7fd570137
+
+
+
+convert each hash 160 string (from hex) to decimal, 8 times consecutively:
+
+u:
+8720776466079721909771762213131269494113382548405995059565370890728640022694160 4683984331229659857484480106531031039752598395988226198081501784536223047420615 48157885446488201
+
+c:  9858068061682010517039628997918494534036059718196261907400409180194160890545286 6857189560133533456215852300134295675601814053993799799346521488420148385900426 062845416059225
+
+
+subtract compressed output value from the uncompressed value
+
+result:
+8622195785462901804601365923152084548773021951224032440491366798926698413788707 6015412435628324522922321583529688082996580255448288200088036569652021563561611 22095040030428976
+
+  mod the output against the denominator ( output becomes new numerator mod the compressed large int )
+
+8622195785462901804601365923152084548773021951224032440491366798926698413788707 6015412435628324522922321583529688082996580255448288200088036569652021563561611 22095040030428976
+mod
+9858068061682010517039628997918494534036059718196261907400409180194160890545286 6857189560133533456215852300134295675601814053993799799346521488420148385900426 062845416059225
+=
+
+                                                                                                            hit ˅˅˅˅˅˅˅˅
+4567657179955265477688869496299430416164999639328458105301081215777843901430818496575183121504160145300824128508452230020284736823746565628747264924 6782824054627488833276401
+                                                                                                                ˅˅˅˅˅˅˅˅
+                                                                                                     target: 15777840238282132871
+                                                                                                                
+ of interest:
+The integers may be intended to be a fractional in decimal starting from the ten thousandth point place. This theory derives from noting that .00001000 satoshi was sent to every 5th addresses starting from 2^65. let us consider, then how this furthers the theory:
+
+                     ( official ascii measuring tape )
+
+ <-----------------------------------------------66 digts length------------------------------------>|
+.0000456765717995526547768886949629943041616499963932845810530108121577784390143081849657518312150416014530082412850845223002028473682374656562874 72649246782824054627488833276401
+
+
+Maybe im just seeing what I want to see, but the math is indisputable.
+As far as cooincidencial dismissal goes, Im going to stay here for a while.
+Have fun.
